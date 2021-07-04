@@ -1,9 +1,10 @@
-package main.scala.org.spark.scala.mayank
+package spark.scala.org.IPLMatchesAnalysis
 
 import org.apache.spark._
 import org.apache.spark.SparkContext._
 import org.apache.log4j._
 import org.apache.spark.rdd.PairRDDFunctions
+import spark.scala.org.InputOutputFileUtility
 
 object IplAnalysis {
   System.setProperty("hadoop.home.dir", "C:\\winutils")

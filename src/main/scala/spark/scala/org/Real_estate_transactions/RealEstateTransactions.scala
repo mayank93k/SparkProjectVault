@@ -1,6 +1,6 @@
-package org.spark.scala.mayank.Real_estate_transactions
+package spark.scala.org.Real_estate_transactions
 
-import main.scala.org.spark.scala.mayank.InputOutputFileUtility
+import spark.scala.org.InputOutputFileUtility
 import org.apache.spark._
 import org.apache.spark.SparkContext._
 import org.apache.log4j._

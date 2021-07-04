@@ -1,4 +1,4 @@
-package main.scala.scala.spark.practice.mayank.org
+package spark.scala.org
 
 import java.text.SimpleDateFormat
 

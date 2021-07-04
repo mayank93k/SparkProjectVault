@@ -1,10 +1,11 @@
-package main.scala.org.spark.scala.mayank
+package spark.scala.org.TravelAnalysis
 
 import org.apache.spark._
 import org.apache.spark.SparkContext._
 import org.apache.log4j._
 import scala.math._
 import org.apache.spark.rdd.RDD
+import spark.scala.org.InputOutputFileUtility
 
 //create class "TravelAnalysis1" 
 class TravelAnalysis1(sc: SparkContext) {

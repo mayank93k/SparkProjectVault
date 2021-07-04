@@ -1,6 +1,6 @@
-package org.spark.scala.mayank.Temprature
+package spark.scala.org.Temprature
 
-import main.scala.org.spark.scala.mayank.InputOutputFileUtility
+import spark.scala.org.InputOutputFileUtility
 import org.apache.spark._
 import org.apache.log4j._
 

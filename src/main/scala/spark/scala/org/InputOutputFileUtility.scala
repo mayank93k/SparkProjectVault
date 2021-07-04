@@ -1,4 +1,4 @@
-package main.scala.org.spark.scala.mayank
+package spark.scala.org
 
 object InputOutputFileUtility {
   def getCurrentPath: String = "file:///" + System.getProperty("user.dir")

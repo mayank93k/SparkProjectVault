@@ -1,8 +1,8 @@
-package main.scala.scala.spark.practice.mayank.org
+package spark.scala.org
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
-import main.scala.org.spark.scala.mayank.InputOutputFileUtility
+import spark.scala.org.InputOutputFileUtility
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 

@@ -1,4 +1,4 @@
-package main.scala.org.spark.scala.mayank
+package spark.scala.org
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}

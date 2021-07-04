@@ -1,8 +1,7 @@
-package main.scala.org.spark.scala.mayank
-
+package spark.scala.org.Amount
 import org.apache.spark._
 import org.apache.spark.SparkContext._
-import main.scala.org.spark.scala.mayank.InputOutputFileUtility
+import spark.scala.org.InputOutputFileUtility
 import org.apache.log4j._
 
 object Amount {

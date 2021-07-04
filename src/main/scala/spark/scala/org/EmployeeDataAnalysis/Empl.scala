@@ -1,4 +1,4 @@
-package org.spark.scala.mayank.EmployeeDataAnalysis
+package spark.scala.org.EmployeeDataAnalysis
 
 class Empl {
   def populateRecord():List[Employee]=List[Employee](new Employee("mayank","IT",1000000.000,"Bangalore","Karnataka",1234,"8197489456","India","SE","Desktop"),

@@ -1,4 +1,4 @@
-package main.scala.scala.spark.practice.mayank.org
+package spark.scala.org
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.functions.{desc, lit, sum}

@@ -1,4 +1,4 @@
-package org.spark.scala.mayank.EmployeeDataAnalysis
+package spark.scala.org.EmployeeDataAnalysis
 
 class EmployeeAnalysis {
 

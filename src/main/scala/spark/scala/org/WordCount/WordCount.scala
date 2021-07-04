@@ -1,11 +1,11 @@
-package org.spark.scala.mayank.WordCount
+package spark.scala.org.WordCount
 
-import main.scala.org.spark.scala.mayank.InputOutputFileUtility
+import spark.scala.org.InputOutputFileUtility
 import org.apache.spark._
 import org.apache.spark.SparkContext._
 import org.apache.log4j._
 
-object WordCount1 {
+object WordCount {
   System.setProperty("hadoop.home.dir", "C:\\winutils")
   def main(args:Array[String]) {
     Logger.getLogger("org").setLevel(Level.ERROR)

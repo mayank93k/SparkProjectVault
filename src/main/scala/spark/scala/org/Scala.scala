@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
-import main.scala.org.spark.scala.mayank.InputOutputFileUtility
+import spark.scala.org.InputOutputFileUtility
 
 object Scala {
   System.setProperty("hadoop.home.dir", "C:\\winutils");

@@ -1,0 +1,23 @@
+Overview:
+-----------
+The Sales Jan 2009 file contains some “sanitized” sales transactions during the month of January. These 998 transactions
+are easily summarized and filtered by transaction date, payment type, country, city, and geography.
+
+Questions:
+Case1: display the details of customer which includes name along with their address(city,state,country)of each customer 
+who buy product 1 and use payment-type as "Mastercard".
+
+Case2: Generate the Payment_type used in Country "United States".
+
+Case3: Find the no of people lives in state "England".
+
+Case4: 
+Case4a) Get the Geography(Latitude and Longitude) of each customer who buy Product3 along with their name.
+Case4b) No of customer who buy Product3:
+
+Input File:SalesJan2009.csv
+Output Files:Case1.txt
+             Case2.txt
+             Case3.txt
+             Case4a.txt
+             Case4b.txt

@@ -1,0 +1,30 @@
+OVERVIEW:: 
+------------------------
+In this project, We have to perform analysis on the IPL dataset and derive some important primitives from it like which 
+stadium is most suitable for batting first and bowling first along with the winning percentage of each stadium for batting 
+and bowling first.
+
+UseCase:
+  Case1.Which stadium is best suitable for first batting
+  Case2.No of matches that each stadium has been venued 
+  Case3.The winning percentage of each stadium for first_bat_won
+  Case4.Which stadium is best suitable for first Bowling 
+  Case5.The total of number of matches each stadium has venued(same as case 2)
+  Case6.The winning percentage of each stadium for bowl_first_won
+
+Inputfile: iplmatch.csv
+Outputfile: Case1_output.txt
+            Case2_output.txt
+            Case3_output.txt
+            Case4_output.txt
+            Case5_output.txt
+            Case6_output.txt
+            
+=> When we take the list of stadiums, the top 4 stadiums with the highest first bat win percentage venued all have below 20 matches. 
+But in Chidambaram stadium there held total 48 matches out of 30 match won by side batting first. When we take that streak, 
+we can deduce that Ma Chidambaram Stadium is most suitable(Rank 1 if we consider atleast 20 matches is played on that ground) 
+for first batting in the IPL.
+
+=>Green park stands is in the first place but the number of matches held there was only 2 but the total number of matches held 
+at Eden gardens were 40, out of 40 matches 32 matches won by bowling first. So if we take that winning streak, 
+Eden gardens is most suitable for bowling first.

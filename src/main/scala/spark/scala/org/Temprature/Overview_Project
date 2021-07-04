@@ -1,0 +1,8 @@
+Overview:
+---------------
+/*Find the minimum temperature by weather station*/
+
+InputFile: temp.csv
+OutputFile: MinTempOutput.txt
+            MaxTempOutput.txt
+            MaxPrcpOutput.txt

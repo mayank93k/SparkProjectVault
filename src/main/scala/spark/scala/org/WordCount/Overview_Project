@@ -1,0 +1,5 @@
+In this project we are going to Count up how many of each word occurs in a book, using regular expressions 
+and sorting the final results to output file.
+
+InputFile:book.txt
+OutputFile:WordCountOutput

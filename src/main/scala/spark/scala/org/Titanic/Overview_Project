@@ -1,0 +1,14 @@
+Overview:
+-------------
+In the analysis of the Titanic dataset, the major question that arises is:
+
+Case1: If gender is "male" then display the name of that person
+Case2: If gender is "male" and age is "22" then display name and age of that person
+Case3: No of female and male traveling
+Case4: Passenger distribution on the basis of pclass
+
+InputFile:titanic-data.txt
+OutputFile:Case1Output.txt
+           Case2Output.txt
+           Case3Output.txt
+           Case4Output.txt

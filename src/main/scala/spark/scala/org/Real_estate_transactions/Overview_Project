@@ -1,0 +1,14 @@
+Overview
+---------------
+The Sacramento real estate transactions file is a list of 985 real estate transactions in the Sacramento area 
+reported over a five-day period, this file has address level information.
+
+Questions:
+Case1: Calculate price of each flat and address who is having 4 "beds" and 2 "baths" and display the result 
+if Price of flat is greater than or equal to 300000 and less than or equal to 500000.
+
+Case2: If flat is having no of "beds" is 3 and Residence_type is "Condo" then display sale_date along with its area in sq__ft.
+
+InputFile:Sacramentorealestatetransactions.csv
+OutputFile:Case1.txt
+           Case2.txt

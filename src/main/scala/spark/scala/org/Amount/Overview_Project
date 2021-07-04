@@ -1,0 +1,7 @@
+Overview:
+----------------
+Compute the total amount spent per customer in some e-commerce data.
+(Calculate the total amount spend by one id(customer)).
+
+InputFile: customer-orders.csv
+OutputFile: AmountOutput

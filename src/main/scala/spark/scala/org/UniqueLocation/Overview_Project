@@ -1,0 +1,23 @@
+Overview:
+-------------
+Given two datasets:
+1)transactions_test.txt 	
+2)users_test.txt
+
+Dataset explanation:
+----------------------
+A set of user information containing (id, email, language, location)
+A set of item purchases, containing fields (transaction-id, product-id, user-id, purchase-amount, product-description)
+
+Question:
+------------
+Calculate the number of locations in which a product is purchased.
+
+
+In this example, it requires to join of two datasets, on the basis of id and user-id.
+In step two aggregates on location. 
+
+
+InputFile: transactions_test.txt 	
+           users_test.txt
+OutputFile: locationOut

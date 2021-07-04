@@ -1,0 +1,2 @@
+EZE00100082 maximum temprature: 90.14 F
+ITE00100554 maximum temprature: 90.14 F

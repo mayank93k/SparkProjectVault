@@ -2,15 +2,9 @@ package spark.scala.org
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
-import spark.scala.org.InputOutputFileUtility
-import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
 object corruptData {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
-
-  case class WindowFunction(order_id: Int, order_date: String, customer_name: String, city: String, order_amount: Int)
-
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
 
@@ -19,13 +13,12 @@ object corruptData {
     val readFile = spark.sparkContext.textFile(InputOutputFileUtility.getInputPath("test.csv")).toDF()
     readFile.show(false)
 
-
-    val schema = new StructType().add("order_id", IntegerType, true)
-      .add("order_date", StringType, true)
-      .add("customer_name", StringType, true)
-      .add("city", StringType, true)
-      .add("order_amount", IntegerType, true)
-      .add("_corrupt_record", StringType, true)
+    val schema = new StructType().add("order_id", IntegerType, nullable = true)
+      .add("order_date", StringType, nullable = true)
+      .add("customer_name", StringType, nullable = true)
+      .add("city", StringType, nullable = true)
+      .add("order_amount", IntegerType, nullable = true)
+      .add("_corrupt_record", StringType, nullable = true)
 
     val aa = spark.read.format("csv").option("header", "true").schema(schema).load(InputOutputFileUtility.getInputPath("test.csv"))
     aa.show(false)

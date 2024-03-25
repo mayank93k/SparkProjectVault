@@ -1,20 +1,17 @@
 package spark.scala.org
 
-import java.text.SimpleDateFormat
-
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
-import spark.scala.org.InputOutputFileUtility
+
+import java.text.SimpleDateFormat
 
 object Scala {
-  System.setProperty("hadoop.home.dir", "C:\\winutils");
-
-  case class Employee(empno: Int, ename: String, designation: String, manager: String, hire_date: String, sal: Int, deptno: Int, machine:String)
-
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
+
     val conf = new SparkConf().setAppName("").setMaster("local").set("spark.executor.memory", "1g").set("spark.driver.allowMultipleContexts", "true")
     val sparkContext = new SparkContext(conf)
+
     val textRdd = sparkContext.textFile(InputOutputFileUtility.getInputPath("emp_data.csv"))
     val header = textRdd.first()
     val empRdd = textRdd.filter(data => data != header).map {
@@ -61,26 +58,28 @@ object Scala {
 
     //Display the record of those employee group by deptno.
     println("Display the record of those employee group by deptno.")
-    empRdd.map(x=>x).groupBy(a=>a.deptno).foreach(println)
+    empRdd.map(x => x).groupBy(a => a.deptno).foreach(println)
 
 
     //Display the records who has designation as a Manager.
     println("Display the records who has designation as a Manager.")
-    empRdd.filter(x=>x.designation=="MANAGER").foreach(println)
+    empRdd.filter(x => x.designation == "MANAGER").foreach(println)
 
 
     //Second highest salary and second lowest salary.
     println("The information of those employee who has second highest salary is:")
-    val emp=empRdd.map(x=>x.sal)
-    val max_salary=emp.sortBy(x=>x,false,1)
-    val second_highest_salary=max_salary.zipWithIndex().filter(index=>index._2==1).map(_._1)
+    val emp = empRdd.map(x => x.sal)
+    val max_salary = emp.sortBy(x => x, false, 1)
+    val second_highest_salary = max_salary.zipWithIndex().filter(index => index._2 == 1).map(_._1)
     second_highest_salary.foreach(println)
 
 
     println("The information of those employee who has second lowest salary is:")
-    val min_salary=emp.sortBy(x=>x,true,1)
-    val second_lowest_salary=min_salary.zipWithIndex().filter(index=>index._2==1).map(_._1)
+    val min_salary = emp.sortBy(x => x, true, 1)
+    val second_lowest_salary = min_salary.zipWithIndex().filter(index => index._2 == 1).map(_._1)
     second_lowest_salary.foreach(println)
   }
+
+  case class Employee(empno: Int, ename: String, designation: String, manager: String, hire_date: String, sal: Int, deptno: Int, machine: String)
 
 }

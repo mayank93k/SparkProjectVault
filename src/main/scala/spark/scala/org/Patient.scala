@@ -3,28 +3,20 @@ package spark.scala.org
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.functions.{desc, lit, sum}
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
-import org.apache.spark.sql.{Row, SQLContext}
-import org.apache.spark.{SparkConf, SparkContext}
-import spark.scala.org.InputOutputFileUtility
+import org.apache.spark.sql.{Row, SparkSession}
 
 import scala.util.Try
 
 object Patient {
   Logger.getLogger("org").setLevel(Level.ERROR)
-  System.setProperty("hadoop.home.dir", "C:\\winutils");
 
-  case class Patient(DRGDefinition: String, ProviderId: Option[Int], ProviderName: String, providerStreetAddress: String, ProviderCity: String, ProviderState: String, ProviderZipCode: Option[Int], HospitalReferralRegionDescription: String,
-                     TotalDischarges: Option[Int], AverageCoveredCharges: Option[Double], AverageTotalPayments: Option[Double], AverageMedicarePayments: Option[Double])
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder().appName("Patient").master("local").getOrCreate()
 
-  def main(args: Array[String]) {
-
-    val config = new SparkConf().setAppName("Patient").setMaster("local")
-    val sc = new SparkContext(config)
-    val sqlContext = new SQLContext(sc)
-    import sqlContext.implicits._
+    import spark.implicits._
 
     //Creating a DataFrame from an RDD
-    val rowsRDD = sc.textFile(InputOutputFileUtility.getInputPath("inpatientCharges.csv"))
+    val rowsRDD = spark.sparkContext.textFile(InputOutputFileUtility.getInputPath("inpatientCharges.csv"))
     val RDD = rowsRDD.map { row => row.split(",") }
       .map { x => Patient(x(0), Try(x(1).toInt).toOption, x(2), x(3), x(4), x(5), Try(x(6).toInt).toOption, x(7), Try(x(8).toInt).toOption, Try(x(9).toDouble).toOption, Try(x(10).toDouble).toOption, Try(x(11).toDouble).toOption) }
     val df = RDD.toDF()
@@ -33,7 +25,7 @@ object Patient {
     df.printSchema()
     val schema_old = StructType(StructField("b1", StringType, true) :: StructField("b2", StringType, true) :: Nil)
     /*    val data = sc.parallelize(Seq(Row(" ", " ")))
-        val testDataFrame_old = sqlContext.createDataFrame(data, schema_old)*/
+        val testDataFrame_old = sqlContext.createDataFrame(data, schema_old) */
 
     /* testDataFrame_old.printSchema()
      testDataFrame_old.show(false)*/
@@ -43,9 +35,9 @@ object Patient {
 
     val schema = StructType(StructField("a1", schema_old, true) :: StructField("a2", StringType, true) :: Nil)
 
-    val data1 = sc.parallelize(Seq(Row(Row(a, b), c)))
+    val data1 = spark.sparkContext.parallelize(Seq(Row(Row(a, b), c)))
 
-    val testDataFrame_new = sqlContext.createDataFrame(data1, schema)
+    val testDataFrame_new = spark.createDataFrame(data1, schema)
 
     testDataFrame_new.printSchema()
     testDataFrame_new.show(false)
@@ -75,7 +67,10 @@ object Patient {
       orderBy(desc(sum("TotalDischarges").toString)).show
 
     df.registerTempTable("patient")
-    val countDF = sqlContext.sql("SELECT count(*) AS cnt FROM patient")
+    val countDF = spark.sql("SELECT count(*) AS cnt FROM patient")
     countDF.show()
   }
+
+  private case class Patient(DRGDefinition: String, ProviderId: Option[Int], ProviderName: String, providerStreetAddress: String, ProviderCity: String, ProviderState: String, ProviderZipCode: Option[Int], HospitalReferralRegionDescription: String,
+                             TotalDischarges: Option[Int], AverageCoveredCharges: Option[Double], AverageTotalPayments: Option[Double], AverageMedicarePayments: Option[Double])
 }

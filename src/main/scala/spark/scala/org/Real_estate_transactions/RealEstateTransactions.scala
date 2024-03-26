@@ -1,33 +1,13 @@
 package spark.scala.org.Real_estate_transactions
 
-import spark.scala.org.InputOutputFileUtility
-import org.apache.spark._
-import org.apache.spark.SparkContext._
 import org.apache.log4j._
+import org.apache.spark._
+import spark.scala.org.InputOutputFileUtility
 
 object RealEstateTransactions {
   System.setProperty("hadoop.home.dir", "C:\\winutils")
 
-  //create method to include the fields of the input file
-  def parseLine(line: String) = {
-    val fields = line.split(",") //Splitting the csv file using ",",which is Comma delimited
-    val street = fields(0).toString
-    val city = fields(1).toString
-    val zip = fields(2).toInt
-    val state = fields(3).toString
-    val beds = fields(4).toInt
-    val baths = fields(5).toInt
-    val area = fields(6).toInt
-    val Res_type = fields(7).toString
-    val sale_date = fields(8).toString
-    val price = fields(9).toInt
-
-    // In Address variable we are including the values of Street,City,State and Zip as a single String "address".
-    val address = (fields(0).toString, fields(1).toString, fields(3).toString, fields(2).toInt).toString
-    (beds, baths, area, Res_type, sale_date, price, address)
-  }
-
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     //Creation of SparkContext object
     val sc = new SparkContext("local[*]", "Protein") //local[*] : as much thread as possible considering your CPUs
@@ -46,7 +26,7 @@ object RealEstateTransactions {
     //*****************************
 
     //filter the no of beds and baths respectively
-    val Filter = rdd.filter(x => (x._1 == 4 && x._2 == 2))
+    val Filter = rdd.filter(x => x._1 == 4 && x._2 == 2)
 
     //map the price and address as key value pair
     val calculate = Filter.map(x => (x._6, x._7))
@@ -66,10 +46,10 @@ object RealEstateTransactions {
     //******************************
 
     //filter the no of beds and Res_type respectively
-    val Filter_data = rdd.filter(x => (x._1 == 3 && x._4 == "Condo"))
+    val Filter_data = rdd.filter(x => x._1 == 3 && x._4 == "Condo")
 
     //filter the Area in sq__ft (eliminate all the zeros)
-    val eliminate = Filter_data.filter(x => (x._3 != 0))
+    val eliminate = Filter_data.filter(x => x._3 != 0)
 
     //map the sale_date and area as key value pair
     val details = eliminate.map(x => (x._5, x._3))
@@ -81,5 +61,20 @@ object RealEstateTransactions {
       val Area = result._2
       println(s"$Sale_Date and $Area in sq__ft")
     }
+  }
+
+  //create method to include the fields of the input file
+  def parseLine(line: String): (Int, Int, Int, String, String, Int, String) = {
+    val fields = line.split(",") //Splitting the csv file using ",",which is Comma delimited
+    val beds = fields(4).toInt
+    val baths = fields(5).toInt
+    val area = fields(6).toInt
+    val Res_type = fields(7)
+    val sale_date = fields(8)
+    val price = fields(9).toInt
+
+    // In Address variable we are including the values of Street,City,State and Zip as a single String "address".
+    val address = (fields(0), fields(1), fields(3), fields(2).toInt).toString
+    (beds, baths, area, Res_type, sale_date, price, address)
   }
 }

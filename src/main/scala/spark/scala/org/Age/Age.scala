@@ -1,26 +1,13 @@
 package spark.scala.org.Age
 
-import spark.scala.org.InputOutputFileUtility
-import org.apache.spark._
-import org.apache.spark.SparkContext._
 import org.apache.log4j._
+import org.apache.spark._
+import spark.scala.org.InputOutputFileUtility
 
 object Age {
   System.setProperty("hadoop.home.dir", "C:\\winutils")
 
-  //A function that splits a line of input into (age, numFriends)
-  def parseLine(line: String) = {
-    // Split by commas
-    val fields = line.split(",")
-
-    // Extract the age and numFriends fields, and convert to integers
-    val age = fields(2).toInt
-    val nofri = fields(3).toInt
-    // Create a tuple that is our result.
-    (age, nofri)
-  }
-
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     // Create a SparkContext using every core of the local machine
     val sc = new SparkContext("local[*]", "Age")
@@ -46,5 +33,17 @@ object Age {
 
     // Sort and print the final results.
     results.sorted.foreach(println)
+  }
+
+  //A function that splits a line of input into (age, numFriends)
+  def parseLine(line: String): (Int, Int) = {
+    // Split by commas
+    val fields = line.split(",")
+
+    // Extract the age and numFriends fields, and convert to integers
+    val age = fields(2).toInt
+    val nofri = fields(3).toInt
+    // Create a tuple that is our result.
+    (age, nofri)
   }
 }

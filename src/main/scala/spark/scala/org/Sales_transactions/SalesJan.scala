@@ -1,35 +1,13 @@
 package spark.scala.org.Sales_transactions
 
-import spark.scala.org.InputOutputFileUtility
-import org.apache.spark._
-import org.apache.spark.SparkContext._
 import org.apache.log4j._
+import org.apache.spark._
+import spark.scala.org.InputOutputFileUtility
 
 object SalesJan {
   System.setProperty("hadoop.home.dir", "C:\\winutils")
 
-  //create method to include the fields of the input file
-  def parseLine(line: String) = {
-    val fields = line.split(",")
-    //Splitting the csv file using ",",which is Comma delimited
-    val product = fields(1).toString
-    val name = fields(4).toString
-    val paymentType = fields(3).toString
-    val country = fields(7).toString
-    val state = fields(6).toString
-    val Latitude = fields(10).toString
-    val Longitude = fields(11).toString
-
-    // In Geography variable we are including the values of Latitude and Longitude as a single value.
-    val Geography = (fields(10).toString, fields(11).toString).toString
-    val City = fields(5).toString
-
-    // In Address variable we are including the values of City,State and Country as a single String "Address".
-    val Address = (fields(5).toString, fields(6).toString, fields(7).toString).toString
-    (product, name, paymentType, country, state, Geography, Address)
-  }
-
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     //Creation of SparkContext object
     val sc = new SparkContext("local[*]", "SalesJan") //local[*] : as much thread as possible considering your CPUs
@@ -48,7 +26,7 @@ object SalesJan {
     //************************
 
     //filter the product-type as "product1" and payment-type as "Mastercard"
-    val product = rdd.filter(x => (x._1 == "Product1" && x._3 == "Mastercard"))
+    val product = rdd.filter(x => x._1 == "Product1" && x._3 == "Mastercard")
 
     //map the distinct "name" using distinct keyword and "address" as key value pair
     val details = product.map(x => (x._2.distinct, x._7))
@@ -72,7 +50,7 @@ object SalesJan {
     val paymentType = country.map(x => (x._3, 1)).reduceByKey(_ + _)
 
     //swap the key value pair to sort the key(as value is numeric so now after swap key is numeric)
-    val swap = paymentType.map(line => line.swap).sortByKey(false)
+    val swap = paymentType.map(line => line.swap).sortByKey(ascending = false)
 
     //use action to collect all the details
     val count = swap.collect()
@@ -90,7 +68,7 @@ object SalesJan {
     val state = rdd.filter(x => x._5 == "England")
 
     //use name to count the no of people
-    val NoOfPeople = state.map(x => (x._2)).count()
+    val NoOfPeople = state.map(x => x._2).count()
     println(s"No_of_People:$NoOfPeople")
 
     //*****************************
@@ -119,5 +97,23 @@ object SalesJan {
     //use count action to count the number of customer
     val NoOfCustomer = geography.count
     println(s"No of customer who buy Product3: $NoOfCustomer")
+  }
+
+  //create method to include the fields of the input file
+  def parseLine(line: String): (String, String, String, String, String, String, String) = {
+    val fields = line.split(",")
+    //Splitting the csv file using ",",which is Comma delimited
+    val product = fields(1)
+    val name = fields(4)
+    val paymentType = fields(3)
+    val country = fields(7)
+    val state = fields(6)
+
+    // In Geography variable we are including the values of Latitude and Longitude as a single value.
+    val Geography = (fields(10), fields(11)).toString
+
+    // In Address variable we are including the values of City,State and Country as a single String "Address".
+    val Address = (fields(5), fields(6), fields(7)).toString
+    (product, name, paymentType, country, state, Geography, Address)
   }
 }

@@ -1,16 +1,13 @@
 package spark.scala.org.Titanic
 
-import spark.scala.org.InputOutputFileUtility
-import org.apache.spark._
-import org.apache.spark.SparkContext._
 import org.apache.log4j._
-
-import scala.math._
+import org.apache.spark._
+import spark.scala.org.InputOutputFileUtility
 
 object Titanic {
   System.setProperty("hadoop.home.dir", "C:\\winutils")
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     //Creation of SparkContext object
     val sc = new SparkContext("local[*]", "Titanic") //local[*] : as much thread as possible considering your CPUs
@@ -31,7 +28,7 @@ object Titanic {
     val maledata = split.filter(x => x(4) == "male")
 
     //map name of each male
-    val male = maledata.map(x => (x(3))).collect()
+    val male = maledata.map(x => x(3)).collect()
     male.foreach(println) //display statement
 
     //********************************

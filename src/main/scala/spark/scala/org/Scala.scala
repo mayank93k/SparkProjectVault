@@ -23,7 +23,7 @@ object Scala {
     //Display the average salary of all the employee.
     println("Displaying the average salary")
     val avgSal = empRdd.map(emp => emp.sal).reduce(_ + _)
-    println(s"Average salary is:${avgSal / (empRdd.map(data => data != header).count())}")
+    println(s"Average salary is:${avgSal / empRdd.map(data => data.toString != header).count()}")
 
     //Display the minimum and max salary of clerk, salesman and manager.
     println("Displaying the min and max salary of clerk,salesman and manager")
@@ -44,7 +44,7 @@ object Scala {
     empRdd.filter(p => p.machine == "Desktop" && p.designation == "IT").foreach(println)
 
     //Display the record of those employee whose name is start with 'A' ends with 'S'.
-    val name = empRdd.filter(x => (x.ename.toUpperCase.startsWith("A")) && (x.ename.toUpperCase.endsWith("S")))
+    val name = empRdd.filter(x => x.ename.toUpperCase.startsWith("A") && x.ename.toUpperCase.endsWith("S"))
     println("Display the record of those employee whose name is start with 'A' ends with 'S':")
     for (name1 <- name) {
       println(name1)
@@ -53,11 +53,11 @@ object Scala {
     //Display the record of those employee who got hired before 12/30/1981
     println("Display the record of those employee who got hired before 12-30-1981")
     val date1 = "12-30-1981"
-    val format = new SimpleDateFormat("MM-dd-yyyy");
-    empRdd.filter(a => (format.parse(a.hire_date).before(format.parse(date1)))).foreach(println)
+    val format = new SimpleDateFormat("MM-dd-yyyy")
+    empRdd.filter(a => format.parse(a.hire_date).before(format.parse(date1))).foreach(println)
 
     //Display the record of those employee group by deptno.
-    println("Display the record of those employee group by deptno.")
+    println("Display the record of all employee, group by deptno.")
     empRdd.map(x => x).groupBy(a => a.deptno).foreach(println)
 
 
@@ -69,13 +69,13 @@ object Scala {
     //Second highest salary and second lowest salary.
     println("The information of those employee who has second highest salary is:")
     val emp = empRdd.map(x => x.sal)
-    val max_salary = emp.sortBy(x => x, false, 1)
+    val max_salary = emp.sortBy(x => x, ascending = false, 1)
     val second_highest_salary = max_salary.zipWithIndex().filter(index => index._2 == 1).map(_._1)
     second_highest_salary.foreach(println)
 
 
     println("The information of those employee who has second lowest salary is:")
-    val min_salary = emp.sortBy(x => x, true, 1)
+    val min_salary = emp.sortBy(x => x, ascending = true, 1)
     val second_lowest_salary = min_salary.zipWithIndex().filter(index => index._2 == 1).map(_._1)
     second_lowest_salary.foreach(println)
   }

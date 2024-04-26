@@ -23,7 +23,7 @@ object Patient {
 
     df.show()
     df.printSchema()
-    val schema_old = StructType(StructField("b1", StringType, true) :: StructField("b2", StringType, true) :: Nil)
+    val schema_old = StructType(StructField("b1", StringType, nullable = true) :: StructField("b2", StringType, nullable = true) :: Nil)
     /*    val data = sc.parallelize(Seq(Row(" ", " ")))
         val testDataFrame_old = sqlContext.createDataFrame(data, schema_old) */
 
@@ -33,7 +33,7 @@ object Patient {
     val b = "test_b2"
     val c = "'test_a2"
 
-    val schema = StructType(StructField("a1", schema_old, true) :: StructField("a2", StringType, true) :: Nil)
+    val schema = StructType(StructField("a1", schema_old, nullable = true) :: StructField("a2", StringType, nullable = true) :: Nil)
 
     val data1 = spark.sparkContext.parallelize(Seq(Row(Row(a, b), c)))
 
@@ -66,7 +66,7 @@ object Patient {
     df.groupBy("ProviderState", "DRGDefinition").sum("TotalDischarges").
       orderBy(desc(sum("TotalDischarges").toString)).show
 
-    df.registerTempTable("patient")
+    df.createOrReplaceTempView("patient")
     val countDF = spark.sql("SELECT count(*) AS cnt FROM patient")
     countDF.show()
   }

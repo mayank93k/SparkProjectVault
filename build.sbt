@@ -10,3 +10,5 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % "2.4.8",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
 )
+
+excludeDependencies ++= Seq(ExclusionRule("ch.qos.logoback", "logoback-classic"))

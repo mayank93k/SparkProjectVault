@@ -1,4 +1,4 @@
-name := "Project_Spark_Scala"
+name := "Spark Project Vault"
 
 version := "0.1"
 

@@ -1,2 +1,2 @@
-# Project_Spark_Scala
-Spark project in Scala
+# Spark Project Vault
+Spark multiple projects in Scala

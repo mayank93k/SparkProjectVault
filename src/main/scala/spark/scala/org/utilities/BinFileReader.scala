@@ -6,7 +6,7 @@ import org.apache.spark.sql.functions.lit
 /**
  * An object to read and process binary data files using a Cobol copybook in Apache Spark.
  */
-object ReadBinFile {
+object BinFileReader {
   /**
    * The main method which initializes the Spark session, reads a binary file using a copybook,
    * and performs a simple transformation on the resulting DataFrame.

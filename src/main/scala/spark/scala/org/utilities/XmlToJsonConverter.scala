@@ -1,4 +1,4 @@
-package spark.scala.org
+package spark.scala.org.utilities
 
 import org.apache.log4j._
 import org.apache.spark.sql.SparkSession

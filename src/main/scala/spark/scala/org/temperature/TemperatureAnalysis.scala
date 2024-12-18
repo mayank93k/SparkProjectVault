@@ -5,10 +5,10 @@ import spark.scala.org.common.logger.Logging
 
 import scala.math.{max, min}
 
-object MinTemp extends Logging {
+object TemperatureAnalysis extends Logging {
   def main(args: Array[String]): Unit = {
     // Create a SparkContext using every core of the local machine
-    val sc = new SparkContext("local[*]", "MinTemp")
+    val sc = new SparkContext("local[*]", "TemperatureAnalysis")
     //val sc=new SparkContext("local[*]", "MaxTemp")
     //val sc=new SparkContext("local[*]", "MaxPrcp")
 

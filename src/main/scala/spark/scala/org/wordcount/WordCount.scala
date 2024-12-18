@@ -12,7 +12,7 @@ object WordCount {
     val spark = SparkSession.builder.appName("wordcount").master("local").getOrCreate()
 
     // reads each line of data from book.txt file and computes the results
-    val lines = spark.read.textFile("src/main/resources/input/textFile/book.txt").rdd
+    val lines = spark.read.textFile("src/main/resources/input/textfile/book.txt").rdd
 
     // Split using a regular expression that extracts words
     val p = lines.flatMap(line => line.split("\\W+"))
@@ -30,6 +30,6 @@ object WordCount {
     val swap = count.map(item => item.swap)
 
     //store the output to file
-    swap.saveAsTextFile("src/main/resources/input/textFile/WordCountOutput")
+    swap.saveAsTextFile("src/main/resources/input/textfile/WordCountOutput")
   }
 }

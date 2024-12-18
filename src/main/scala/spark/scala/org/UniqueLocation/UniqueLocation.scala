@@ -3,20 +3,19 @@ package spark.scala.org.UniqueLocation
 import org.apache.log4j._
 import org.apache.spark._
 import org.apache.spark.rdd.RDD
-import spark.scala.org.InputOutputFileUtility
 
 import scala.collection.Map
 
 class UniqueLocation(sc: SparkContext) {
 
   // read data from text files and computes the results. 
-  def run(t: String, u: String): RDD[(String, String)] = {
-    val transations = sc.textFile(InputOutputFileUtility.getInputPath(t))
+  def run(): RDD[(String, String)] = {
+    val transations = sc.textFile("src/main/resources/input/uniquelocation/transactions_test.txt")
     val transPair = transations.map { t =>
       val p = t.split("\t")
       (p(2).toInt, p(1).toInt)
     }
-    val users = sc.textFile(InputOutputFileUtility.getInputPath(u))
+    val users = sc.textFile("src/main/resources/input/uniquelocation/users_test.txt")
     val userPair = users.map { t =>
       val p = t.split("\t")
       (p(0).toInt, p(3))
@@ -32,14 +31,13 @@ class UniqueLocation(sc: SparkContext) {
 }
 
 object UniqueLocation {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
 
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     val sc = new SparkContext("local[*]", "UniqueLocation")
     val job = new UniqueLocation(sc)
-    val results = job.run("transactions_test.txt", "users_test.txt")
-    results.saveAsTextFile(InputOutputFileUtility.getOutputPath("locationOut"))
+    val results = job.run()
+    results.coalesce(1).saveAsTextFile("src/main/resources/input/uniquelocation/locationOut")
     sc.stop()
   }
 }

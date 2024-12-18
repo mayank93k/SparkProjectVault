@@ -1,4 +1,4 @@
-package spark.scala.org.SchemaInfer
+package spark.scala.org.schemainfer
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.catalyst.ScalaReflection

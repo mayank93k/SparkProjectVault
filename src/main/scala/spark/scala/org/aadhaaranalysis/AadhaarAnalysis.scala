@@ -1,16 +1,16 @@
-package spark.scala.org.aadhaar.dataset.analysis
+package spark.scala.org.aadhaaranalysis
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import spark.scala.org.generic.InputOutputFileUtility
 
-object aadhaarAnalysis {
+object AadhaarAnalysis {
   System.setProperty("hadoop.home.dir", "C:\\winutils")
 
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
-    val sc = SparkSession.builder().master("local[*]").appName("aadhaarAnalysis").getOrCreate()
+    val sc = SparkSession.builder().master("local[*]").appName("AadhaarAnalysis").getOrCreate()
     import sc.implicits._
 
     /**

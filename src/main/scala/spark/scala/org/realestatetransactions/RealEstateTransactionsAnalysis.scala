@@ -1,17 +1,13 @@
-package spark.scala.org.Real_estate_transactions
+package spark.scala.org.realestatetransactions
 
-import org.apache.log4j._
 import org.apache.spark._
-import spark.scala.org.generic.InputOutputFileUtility
+import spark.scala.org.common.logger.Logging
 
-object RealEstateTransactions {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
-
+object RealEstateTransactionsAnalysis extends Logging {
   def main(args: Array[String]): Unit = {
-    Logger.getLogger("org").setLevel(Level.ERROR)
     //Creation of SparkContext object
     val sc = new SparkContext("local[*]", "Protein") //local[*] : as much thread as possible considering your CPUs
-    val data = sc.textFile(InputOutputFileUtility.getInputPath("Sacramentorealestatetransactions.csv")) //Input dataset in csv format
+    val data = sc.textFile("src/main/resources/input/realestatetransactions/sacramentorealestatetransactions.csv") //Input dataset in csv format
 
     //Steps to remove Header from csv file.
     val header = data.first() //selecting the first row of record which contains header
@@ -21,10 +17,11 @@ object RealEstateTransactions {
     val rdd = data1.map(parseLine)
 
     //*****************************
-    //Case1: Calculate price of each flat and address who is having 4 "beds" and 2 "baths" and display the result if Price of flat is
+    // Case 1: Calculate price of each flat and address who is having 4 "beds" and 2 "baths" and display the result if Price of flat is
     // greater than or equal to 300000 and less than or equal to 500000.
     //*****************************
-
+    logger.info("Case 1: Calculate price of each flat and address who is having 4 beds and baths and display the result " +
+      "if Price of flat is greater than or equal to 300000 and less than or equal to 500000.")
     //filter the no of beds and baths respectively
     val Filter = rdd.filter(x => x._1 == 4 && x._2 == 2)
 
@@ -37,14 +34,15 @@ object RealEstateTransactions {
       val Address = result._2
       val Price = result._1
       if (Price >= 300000 && Price <= 500000) {
-        println(s"Price of flat is: $Price and Address is: $Address")
+        logger.info(s"Price of flat is: $Price and Address is: $Address")
       }
     }
 
     //******************************
-    //Case2: If flat is having no of "beds" is 3 and Residence_type is "Condo" then display sale_date along with its area in sq__ft.
+    // Case 2: If flat is having no of "beds" is 3 and Residence_type is "Condo" then display
+    // sale_date along with its area in sq__ft.
     //******************************
-
+    logger.info("Case 2: If flat is having no of beds is 3 and Residence_type is Condo then display sale_date along with its area in sq__ft.")
     //filter the no of beds and Res_type respectively
     val Filter_data = rdd.filter(x => x._1 == 3 && x._4 == "Condo")
 
@@ -59,7 +57,7 @@ object RealEstateTransactions {
     for (result <- getDetails) {
       val Sale_Date = result._1
       val Area = result._2
-      println(s"$Sale_Date and $Area in sq__ft")
+      logger.info(s"$Sale_Date and $Area in sq__ft")
     }
   }
 

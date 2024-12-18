@@ -1,17 +1,15 @@
-package spark.scala.org.Titanic
+package spark.scala.org.titanic
 
 import org.apache.log4j._
 import org.apache.spark._
-import spark.scala.org.generic.InputOutputFileUtility
+import spark.scala.org.common.logger.Logging
 
-object Titanic {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
-
+object Titanic extends Logging {
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     //Creation of SparkContext object
-    val sc = new SparkContext("local[*]", "Titanic") //local[*] : as much thread as possible considering your CPUs
-    val data = sc.textFile(InputOutputFileUtility.getInputPath("titanic-data.txt")) //Input dataset in txt format
+    val sc = new SparkContext("local[*]", "titanic") //local[*] : as much thread as possible considering your CPUs
+    val data = sc.textFile("src/main/resources/input/titanic/titanic-data.txt") //Input dataset in txt format
 
     //Steps to remove Header from txt file.
     val header = data.first() //selecting the first row of record which contains header
@@ -21,9 +19,9 @@ object Titanic {
     val split = data1.map(fields => fields.split("\t"))
 
     //********************************
-    //case1: If gender is "male" then display the name of that person
+    // case1: If gender is "male" then display the name of that person
     //********************************
-
+    logger.info("case1: If gender is male then display the name of that person")
     //filter the gender as "male"
     val maledata = split.filter(x => x(4) == "male")
 
@@ -32,9 +30,9 @@ object Titanic {
     male.foreach(println) //display statement
 
     //********************************
-    //case2: If gender is "male" and age is "22" then display name and age of that person
+    // case2: If gender is "male" and age is "22" then display name and age of that person
     //********************************
-
+    logger.info("case2: If gender is male and age is 22 then display name and age of that person")
     //filter the gender as "male" and age as "22"
     val MaleData = split.filter(x => x(4) == "male" && x(5) == "22")
 
@@ -43,9 +41,9 @@ object Titanic {
     Male.foreach(println) //display statement
 
     //*********************************
-    //case3: No of female and male traveling
+    // case3: No of female and male traveling
     //*********************************
-
+    logger.info("case3: No of female and male traveling")
     //filter the gender as "female" or "male"
     val travelerData = split.filter(x => x(4) == "female" || x(4) == "male")
 
@@ -54,9 +52,9 @@ object Titanic {
     noOfTraveler.foreach(println) //display statement
 
     //**********************************
-    //case4: Passenger distribution on the basis of pclass
+    // case4: Passenger distribution on the basis of class
     //**********************************
-
+    logger.info("case4: Passenger distribution on the basis of class")
     //filter the pclass as "1", "2" and "3"
     val pClass = split.filter(x => x(2) == "1" || x(2) == "2" || x(2) == "3")
 

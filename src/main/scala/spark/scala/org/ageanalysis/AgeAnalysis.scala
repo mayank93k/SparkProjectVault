@@ -1,31 +1,32 @@
-package spark.scala.org.Age
+package spark.scala.org.ageanalysis
 
 import org.apache.log4j._
 import org.apache.spark._
-import spark.scala.org.generic.InputOutputFileUtility
 
-object Age {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
-
+object AgeAnalysis {
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     // Create a SparkContext using every core of the local machine
-    val sc = new SparkContext("local[*]", "Age")
+    val sc = new SparkContext("local[*]", "AgeAnalysis")
 
     // reads data from friends.csv file and computes the results
-    val data = sc.textFile(InputOutputFileUtility.getInputPath("friends.csv"))
+    val data = sc.textFile("src/main/resources/input/ageanalysis/friends.csv")
 
     // Use our parseLines function to convert to (age, numFriends)
     val rdd = data.map(parseLine)
 
-    // We are starting with an RDD of form (age, numFriends) where age is the KEY and numFriends is the VALUE
-    // We use mapValues to convert each numFriends value to a tuple of (numFriends, 1)
-    // Then we use reduceByKey to sum up the total numFriends and total instances for each age, by
-    // adding together all the numFriends values and 1's respectively.
+    /**
+     * We are starting with an RDD of form (age, numFriends) where age is the KEY and numFriends is the VALUE
+     * We use mapValues to convert each numFriends value to a tuple of (numFriends, 1)
+     * Then we use reduceByKey to sum up the total numFriends and total instances for each age, by
+     * adding together all the numFriends values and 1's respectively.
+     */
     val totalByAge = rdd.mapValues(x => (x, 1)).reduceByKey((x, y) => (x._1 + y._1, x._2 + y._2))
 
-    // So now we have tuples of (age, (totalFriends, totalInstances))
-    // To compute the average we divide totalFriends / totalInstances for each age.
+    /**
+     * So now we have tuples of (age, (totalFriends, totalInstances))
+     * To compute the average we divide totalFriends / totalInstances for each age.
+     */
     val averageByAge = totalByAge.mapValues(x => x._1 / x._2)
 
     //Collect the results from the RDD

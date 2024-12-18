@@ -1,2 +1,0 @@
-EZE00100082 minimum temprature: 7.70 F
-ITE00100554 minimum temprature: 5.36 F

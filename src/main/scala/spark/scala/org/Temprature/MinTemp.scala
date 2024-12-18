@@ -2,7 +2,7 @@ package spark.scala.org.Temprature
 
 import org.apache.log4j._
 import org.apache.spark._
-import spark.scala.org.InputOutputFileUtility
+import spark.scala.org.generic.InputOutputFileUtility
 
 import scala.math.min
 

@@ -1,4 +1,4 @@
-package spark.scala.org
+package spark.scala.org.generic
 
 object InputOutputFileUtility {
   def getInputPath(fileName: String): String = getDataDirPath + fileName

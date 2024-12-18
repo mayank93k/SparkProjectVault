@@ -3,7 +3,7 @@ package spark.scala.org.aadhaar.dataset.analysis
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-import spark.scala.org.InputOutputFileUtility
+import spark.scala.org.generic.InputOutputFileUtility
 
 object aadhaarAnalysis {
   System.setProperty("hadoop.home.dir", "C:\\winutils")

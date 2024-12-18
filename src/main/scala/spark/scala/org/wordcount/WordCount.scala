@@ -3,7 +3,7 @@ package spark.scala.org.wordcount
 import org.apache.log4j._
 import org.apache.spark._
 import org.apache.spark.sql.SparkSession
-import spark.scala.org.InputOutputFileUtility
+import spark.scala.org.generic.InputOutputFileUtility
 
 object WordCount {
   def main(args: Array[String]): Unit = {

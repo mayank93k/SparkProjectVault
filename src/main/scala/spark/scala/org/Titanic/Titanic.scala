@@ -2,7 +2,7 @@ package spark.scala.org.Titanic
 
 import org.apache.log4j._
 import org.apache.spark._
-import spark.scala.org.InputOutputFileUtility
+import spark.scala.org.generic.InputOutputFileUtility
 
 object Titanic {
   System.setProperty("hadoop.home.dir", "C:\\winutils")

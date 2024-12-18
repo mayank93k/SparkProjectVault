@@ -2,9 +2,9 @@ package spark.scala.org.TravelAnalysis
 
 import org.apache.log4j._
 import org.apache.spark._
-import spark.scala.org.InputOutputFileUtility
+import spark.scala.org.generic.InputOutputFileUtility
 
-//create class "TravelAnalysis1" 
+//create class "TravelAnalysis1"
 class TravelAnalysis1(sc: SparkContext) {
 
   //create function destination to calculate the top 20 destination people travel the most

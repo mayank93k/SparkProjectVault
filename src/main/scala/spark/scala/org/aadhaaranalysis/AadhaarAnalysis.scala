@@ -3,13 +3,11 @@ package spark.scala.org.aadhaaranalysis
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import spark.scala.org.common.logger.Logging
 import spark.scala.org.generic.InputOutputFileUtility
 
-object AadhaarAnalysis {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
-
+object AadhaarAnalysis extends Logging {
   def main(args: Array[String]): Unit = {
-    Logger.getLogger("org").setLevel(Level.ERROR)
     val sc = SparkSession.builder().master("local[*]").appName("AadhaarAnalysis").getOrCreate()
     import sc.implicits._
 
@@ -17,7 +15,9 @@ object AadhaarAnalysis {
      * CHECKPOINT 1
      *  1. Load the data into Spark.
      */
-    val readData = sc.read.format("csv").textFile(InputOutputFileUtility.getInputPath("aadhaar_data.csv"))
+    logger.info("CHECKPOINT 1: ")
+    logger.info("1. Load the data into Spark.")
+    val readData = sc.read.format("csv").textFile("src/main/resources/input/aadhaaranalysis/aadhaar_data.csv")
     val splitData = readData.map {
       line =>
         val col = line.split(",")
@@ -27,6 +27,7 @@ object AadhaarAnalysis {
     /**
      * 2.	View/result of the top 25 rows from each individual agency.
      */
+    logger.info("2.View/result of the top 25 rows from each individual agency.")
     splitData.createOrReplaceTempView("problem1")
     sc.sql("select private_agency, count(private_agency) as topAgency from problem1 group by private_agency order by topAgency desc")
       .drop("topAgency").show(false)
@@ -35,16 +36,20 @@ object AadhaarAnalysis {
      * CHECKPOINT 2
      * 1.	Describe the schema.
      */
+    logger.info("CHECKPOINT 2: ")
+    logger.info("1. Describe the schema.")
     splitData.printSchema()
 
     /**
      * 2.	Find the count and names of registrars in the table.
      */
+    logger.info("2. Find the count and names of registrars in the table.")
     splitData.groupBy('registrar).agg(count('registrar).as("count of registrar")).show(false)
 
     /**
      * 3.	Find the number of states, districts in each state and sub-districts in each district.
      */
+    logger.info("3. Find the number of states, districts in each state and sub-districts in each district.")
     splitData.groupBy('state).agg(count('state).as("countOfState")).show(false)
     splitData.groupBy('district).agg(count('district).as("countOfDistrictInSate")).show(false)
     splitData.groupBy('sub_district).agg(count('sub_district).as("countOfSubDistrictInDistrict'")).show(false)
@@ -52,6 +57,7 @@ object AadhaarAnalysis {
     /**
      * 4.	Find out the names of private agencies for each state
      */
+    logger.info("4. Find out the names of private agencies for each state")
     splitData.groupBy('state, 'private_agency).agg(count('state)).select('state, 'private_agency).orderBy(desc("state"),
       desc("private_agency")).show(20, truncate = false)
 
@@ -59,18 +65,22 @@ object AadhaarAnalysis {
      * CHECKPOINT 3
      * 1.	Find top 3 states generating most number of Aadhaar cards?
      */
+    logger.info("CHECKPOINT 3: ")
+    logger.info("1. Find top 3 states generating most number of Aadhaar cards?")
     splitData.select('state, 'aadhaar_generated).groupBy('state).agg(count('aadhaar_generated).as("countOfAdharCards"))
       .orderBy(desc("countOfAdharCards")).show(3, truncate = false)
 
     /**
      * 2.	Find top 3 districts where enrolment numbers are maximum?
      */
+    logger.info("2. Find top 3 districts where enrolment numbers are maximum?")
     splitData.select('district, 'aadhaar_generated).groupBy('district).agg(count('aadhaar_generated).as("countOfAdharCards"))
       .orderBy(desc("countOfAdharCards")).show(3, truncate = false)
 
     /**
      * 3.	Find the no. of Aadhaar cards generated in each state?
      */
+    logger.info("3. Find the no. of Aadhaar cards generated in each state?")
     splitData.select('state, 'aadhaar_generated).groupBy('state).agg(count('aadhaar_generated).as("countOfAdharCards"))
       .orderBy(desc("countOfAdharCards")).show(false)
 
@@ -78,11 +88,14 @@ object AadhaarAnalysis {
      * CHECKPOINT 4
      * 1.	Find the number of unique pin codes in the data?
      */
+    logger.info("CHECKPOINT 4: ")
+    logger.info("1. Find the number of unique pin codes in the data?")
     splitData.select('pincode).agg(countDistinct('pincode)).show(false)
 
     /**
      * 2.	Find the number of Aadhaar registrations rejected in Uttar Pradesh and Maharashtra?
      */
+    logger.info("2. Find the number of Aadhaar registrations rejected in Uttar Pradesh and Maharashtra?")
     splitData.select('state, 'rejected).filter(splitData("state") === "Uttar Pradesh" || splitData("state") === "Maharashtra")
       .groupBy('state).agg(count('rejected)).show(false)
 
@@ -90,12 +103,15 @@ object AadhaarAnalysis {
      * CHECKPOINT 5
      * 1.	Find the top 3 states where the percentage of Aadhaar cards being generated for males is the highest.
      */
+    logger.info("CHECKPOINT 5: ")
+    logger.info("1. Find the top 3 states where the percentage of Aadhaar cards being generated for males is the highest.")
     splitData.filter(splitData("gender") === "M").groupBy('state).agg(count('aadhaar_generated).as("countOfAdharCards"))
       .orderBy(desc("countOfAdharCards")).select('state).show(3, truncate = false)
 
     /**
      * 2.	Find in each of these 3 states, identify the top 3 districts where the percentage of Aadhaar cards being rejected for females is the highest.
      */
+    logger.info("2. Find in each of these 3 states, identify the top 3 districts where the percentage of Aadhaar cards being rejected for females is the highest.")
     splitData.filter(splitData("gender") === "M").groupBy('state).agg(count('aadhaar_generated).as("countOfAdharCards"))
       .orderBy(desc("countOfAdharCards")).select('state).limit(3).collect().foreach(x => {
         splitData.filter(splitData("state") === x.mkString("") && splitData("gender") === "F").groupBy('district)
@@ -106,6 +122,7 @@ object AadhaarAnalysis {
     /**
      * 3. Find the summary of the acceptance percentage of all the Aadhaar cards applications by bucketing the age group into 10 buckets.
      */
+    logger.info("3. Find the summary of the acceptance percentage of all the Aadhaar cards applications by bucketing the age group into 10 buckets.")
     splitData.filter(splitData("aadhaar_generated") =!= "0")
       .withColumn("bucket", pmod(hash($"age"), lit(10)))
       .repartition(10, $"bucket")

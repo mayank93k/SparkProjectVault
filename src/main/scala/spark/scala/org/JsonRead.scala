@@ -6,7 +6,7 @@ import org.apache.spark.sql.SparkSession
 /**
  * About: Read input as JSON and write as CSV file
  */
-object jsonRead {
+object JsonRead {
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
 

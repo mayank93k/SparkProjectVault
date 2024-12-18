@@ -1,19 +1,18 @@
-package spark.scala.org.WordCount
+package spark.scala.org.wordcount
 
 import org.apache.log4j._
 import org.apache.spark._
+import org.apache.spark.sql.SparkSession
 import spark.scala.org.InputOutputFileUtility
 
 object WordCount {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
-
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
     //Creation of SparkContext object
-    val sc = new SparkContext("local[*]", "WordCount") //local[*] : as much thread as possible considering your CPUs
+    val spark = SparkSession.builder.appName("wordcount").master("local").getOrCreate()
 
     // reads each line of data from book.txt file and computes the results
-    val lines = sc.textFile(InputOutputFileUtility.getInputPath("book.txt"))
+    val lines = spark.read.textFile("src/main/resources/input/textFile/book.txt").rdd
 
     // Split using a regular expression that extracts words
     val p = lines.flatMap(line => line.split("\\W+"))
@@ -31,6 +30,6 @@ object WordCount {
     val swap = count.map(item => item.swap)
 
     //store the output to file
-    swap.saveAsTextFile(InputOutputFileUtility.getOutputPath("WordCountOutput"))
+    swap.saveAsTextFile("src/main/resources/input/textFile/WordCountOutput")
   }
 }

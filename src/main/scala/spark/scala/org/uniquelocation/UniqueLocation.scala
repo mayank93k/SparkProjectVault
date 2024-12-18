@@ -1,4 +1,4 @@
-package spark.scala.org.UniqueLocation
+package spark.scala.org.uniquelocation
 
 import org.apache.log4j._
 import org.apache.spark._
@@ -34,7 +34,7 @@ object UniqueLocation {
 
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
-    val sc = new SparkContext("local[*]", "UniqueLocation")
+    val sc = new SparkContext("local[*]", "uniquelocation")
     val job = new UniqueLocation(sc)
     val results = job.run()
     results.coalesce(1).saveAsTextFile("src/main/resources/input/uniquelocation/locationOut")

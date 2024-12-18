@@ -1,22 +1,19 @@
-package spark.scala.org.IPLMatchesAnalysis
+package spark.scala.org.iplmatchesanalysis
 
-import org.apache.log4j._
 import org.apache.spark._
-import spark.scala.org.generic.InputOutputFileUtility
+import spark.scala.org.common.logger.Logging
 
-object IplAnalysis {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
-
+object IplMatchAnalysis extends Logging {
   def main(args: Array[String]): Unit = {
-    Logger.getLogger("org").setLevel(Level.ERROR)
     val sc = new SparkContext("local[*]", "IPL")
-    val data = sc.textFile(InputOutputFileUtility.getInputPath("iplmatch.csv"))
+    val data = sc.textFile("src/main/resources/input/iplmatchesanalysis/iplmatch.csv")
     val split = data.map(line => line.split(",")) //loading the data from csv file
 
     //filtering the bad records if any,the total number of columns are 19 if any record having less than 19 columns are filtered out.
     val filtering_bad_records = split.filter(x => x.length < 19)
 
-    //Case1.Which stadium is best suitable for first batting
+    // Case 1.Which stadium is best suitable for first batting
+    logger.info("Case 1.Which stadium is best suitable for first batting")
 
     //we are extracting the columns that are required for our analysis
     val extracting_columns = filtering_bad_records.map(x => (x(7), x(11), x(12), x(14)))
@@ -30,13 +27,15 @@ object IplAnalysis {
     val Swap = number.map(item => item.swap).sortByKey(ascending = false).collect
     Swap.foreach(println) //printing of result
 
-    //Case2.No of matches that each stadium has been venued
+    // Case 2.No of matches that each stadium has been venue
+    logger.info("Case 2.No of matches that each stadium has been venue")
 
     val total_matches_per_venue = filtering_bad_records.map(x => (x(14), 1)).reduceByKey(_ + _)
     val Swap1 = total_matches_per_venue.map(item => item.swap).sortByKey(ascending = false)
     Swap1.foreach(println) //printing of result
 
-    //Case3.The winning percentage of each stadium for first_bat_won
+    // Case 3.The winning percentage of each stadium for first_bat_won
+    logger.info("Case 3.The winning percentage of each stadium for first_bat_won")
 
     //we have joined the two RDD’s, bat_first_won and total_matches_per_venue
     //percentage of first_bat_won venues by dividing the number of matches won by batting first and the total number of matches in that venue.
@@ -44,7 +43,8 @@ object IplAnalysis {
     //   val JSwap=join.map(item => item.swap).sortByKey(false).collect
     //     JSwap.foreach(println) //printing of result
 
-    //Case4.Which stadium is best suitable for first Bowling
+    // Case 4.Which stadium is best suitable for first Bowling
+    logger.info("Case 4.Which stadium is best suitable for first Bowling")
 
     //we will take out the columns toss_decision, won_by_runs, won_by_wickets, venue.
     val extracting_columns1 = filtering_bad_records.map(x => (x(7), x(11), x(12), x(14)))
@@ -54,13 +54,15 @@ object IplAnalysis {
     val Swap2 = bowl_first_won.map(item => item.swap).sortByKey(ascending = false).collect
     Swap2.foreach(println) //printing of result
 
-    //Case5.The total of number of matches each stadium has venued(or we can use case 2)
+    // Case 5.The total of number of matches each stadium has venue(or we can use case 2)
+    logger.info("Case 5.The total of number of matches each stadium has venue(or we can use case 2)")
 
     val total_matches_per_venue1 = filtering_bad_records.map(x => (x(14), 1)).reduceByKey(_ + _)
     val Swap3 = total_matches_per_venue1.map(item => item.swap).sortByKey(ascending = false).collect
     Swap3.foreach(println) //printing of result
 
-    //Case6.The winning percentage of each stadium for bowl_first_won
+    // Case 6.The winning percentage of each stadium for bowl_first_won
+    logger.info("Case 6.The winning percentage of each stadium for bowl_first_won")
 
     //perform join operation on the total number of matches in that venue and bowl_first_won
     //   val join1 = Swap2.join(Swap3).map(x=>(x._1,(x._2._1*100/x._2._2)))

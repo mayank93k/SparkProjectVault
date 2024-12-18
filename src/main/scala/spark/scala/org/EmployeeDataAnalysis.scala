@@ -8,6 +8,19 @@ import org.apache.spark.sql.types.{DoubleType, IntegerType}
 import spark.scala.org.common.logger.Logging
 
 object EmployeeDataAnalysis extends Logging {
+  /**
+   * Employee Data Analysis Program
+   *
+   * This program performs various data analysis tasks on employee data using Apache Spark.
+   * Key features include:
+   * - Calculation of average, minimum, and maximum salaries.
+   * - Filtering based on conditions like department, designation, and hire date.
+   * - Grouping employees by department and counting.
+   * - Finding second highest and second lowest salaries using window functions.
+   * - Logging to monitor execution and track results.
+   *
+   * The code demonstrates the use of Spark's DataFrame API for efficient data processing.
+   */
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org").setLevel(Level.ERROR)
 

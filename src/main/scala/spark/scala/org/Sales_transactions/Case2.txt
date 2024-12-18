@@ -1,4 +1,0 @@
-Visa => 225
-Mastercard => 131
-Amex => 72
-Diners => 34

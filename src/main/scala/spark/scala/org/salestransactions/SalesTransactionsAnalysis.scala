@@ -1,17 +1,14 @@
-package spark.scala.org.Sales_transactions
+package spark.scala.org.salestransactions
 
-import org.apache.log4j._
 import org.apache.spark._
-import spark.scala.org.generic.InputOutputFileUtility
+import spark.scala.org.common.logger.Logging
 
-object SalesJan {
-  System.setProperty("hadoop.home.dir", "C:\\winutils")
+object SalesTransactionsAnalysis extends Logging {
 
   def main(args: Array[String]): Unit = {
-    Logger.getLogger("org").setLevel(Level.ERROR)
     //Creation of SparkContext object
-    val sc = new SparkContext("local[*]", "SalesJan") //local[*] : as much thread as possible considering your CPUs
-    val data = sc.textFile(InputOutputFileUtility.getInputPath("SalesJan2009.csv")) //Input dataset in csv format
+    val sc = new SparkContext("local[*]", "SalesTransactionsAnalysis") //local[*] : as much thread as possible considering your CPUs
+    val data = sc.textFile("src/main/resources/input/salestransactions/SalesJan2009.csv") //Input dataset in csv format
 
     //Steps to remove Header from csv file.
     val header = data.first() //selecting the first row of record which contains header
@@ -21,10 +18,11 @@ object SalesJan {
     val rdd = newData.map(parseLine)
 
     //************************
-    //Case1: display the details of customer which includes name along with their address(city,state,country)of
-    //each customer who buy product 1 and use payment-type as "Mastercard".
+    // Case1: display the details of customer which includes name along with their address(city,state,country)of
+    // each customer who buy product 1 and use payment-type as "Mastercard".
     //************************
-
+    logger.info("Case1: display the details of customer which includes name along with their address(city,state,country) " +
+      "of each customer who buy product 1 and use payment-type as Mastercard.")
     //filter the product-type as "product1" and payment-type as "Mastercard"
     val product = rdd.filter(x => x._1 == "Product1" && x._3 == "Mastercard")
 
@@ -36,13 +34,13 @@ object SalesJan {
     for (result <- getDetails) {
       val name = result._1
       val address = result._2
-      println(s"$name from $address buy Product1 and Payment-Type is Mastercard")
+      logger.info(s"$name from $address buy Product1 and Payment-Type is Mastercard")
     }
 
     //************************
-    //Case2: Generate the Payment_type used in Country "United States".
+    // Case2: Generate the Payment_type used in Country "United States".
     //************************
-
+    logger.info("Case2: Generate the Payment_type used in Country \"United States\".")
     //filter the Country as "United States".
     val country = rdd.filter(x => x._4 == "United States")
 
@@ -57,25 +55,25 @@ object SalesJan {
     for (result <- count) {
       val NoofCards = result._1
       val PaymentType = result._2
-      println(s"$PaymentType => $NoofCards")
+      logger.info(s"$PaymentType => $NoofCards")
     }
 
     //**************************
-    //Case3: Find the no of people lives in state "England".
+    // Case3: Find the no of people lives in state "England".
     //**************************
-
+    logger.info("Case3: Find the no of people lives in state \"England\".")
     //filter the State as "England".
     val state = rdd.filter(x => x._5 == "England")
 
     //use name to count the no of people
     val NoOfPeople = state.map(x => x._2).count()
-    println(s"No_of_People:$NoOfPeople")
+    logger.info(s"No_of_People:$NoOfPeople")
 
     //*****************************
-    //Case4:
-    //Case4a) Get the Geography(Latitude and Longitude) of each customer who buy Product3 along with their name.
+    // Case4:
+    // Case4a) Get the Geography(Latitude and Longitude) of each customer who buy Product3 along with their name.
     //*****************************
-
+    logger.info("Case4a) Get the Geography(Latitude and Longitude) of each customer who buy Product3 along with their name.")
     //filter the Product-type as "Product3".
     val Product = rdd.filter(x => x._1 == "Product3")
 
@@ -87,16 +85,16 @@ object SalesJan {
     for (result <- Collect) {
       val name = result._1
       val geography = result._2
-      println(s"Geography(Latitude and Longitude) of $name who buy Product3 => $geography")
+      logger.info(s"Geography(Latitude and Longitude) of $name who buy Product3 => $geography")
     }
 
     //***********************************
-    //Case4b) Count the No of customer who buy Product3
+    // Case4b) Count the No of customer who buy Product3
     //***********************************
-
+    logger.info("Case4b) Count the No of customer who buy Product3")
     //use count action to count the number of customer
     val NoOfCustomer = geography.count
-    println(s"No of customer who buy Product3: $NoOfCustomer")
+    logger.info(s"No of customer who buy Product3: $NoOfCustomer")
   }
 
   //create method to include the fields of the input file

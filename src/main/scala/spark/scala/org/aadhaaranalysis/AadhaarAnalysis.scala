@@ -7,8 +7,8 @@ import spark.scala.org.generic.InputOutputFileUtility
 
 object AadhaarAnalysis extends Logging {
   def main(args: Array[String]): Unit = {
-    val sc = SparkSession.builder().master("local[*]").appName("AadhaarAnalysis").getOrCreate()
-    import sc.implicits._
+    val spark = SparkSession.builder().master("local[*]").appName("AadhaarAnalysis").getOrCreate()
+    import spark.implicits._
 
     /**
      * CHECKPOINT 1
@@ -16,7 +16,7 @@ object AadhaarAnalysis extends Logging {
      */
     logger.info("CHECKPOINT 1: ")
     logger.info("1. Load the data into Spark.")
-    val readData = sc.read.format("csv").textFile("src/main/resources/input/aadhaaranalysis/aadhaar_data.csv")
+    val readData = spark.read.format("csv").textFile("src/main/resources/input/aadhaaranalysis/aadhaar_data.csv")
     val splitData = readData.map {
       line =>
         val col = line.split(",")
@@ -28,7 +28,7 @@ object AadhaarAnalysis extends Logging {
      */
     logger.info("2.View/result of the top 25 rows from each individual agency.")
     splitData.createOrReplaceTempView("problem1")
-    sc.sql("select private_agency, count(private_agency) as topAgency from problem1 group by private_agency order by topAgency desc")
+    spark.sql("select private_agency, count(private_agency) as topAgency from problem1 group by private_agency order by topAgency desc")
       .drop("topAgency").show(false)
 
     /**

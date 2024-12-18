@@ -2,11 +2,12 @@ empno,ename,designation,manager,hire_date,sal,deptno,machine
 101,John Doe,Software Engineer,Michael Smith,15/03/19,70000,10,Machine-A
 102,Jane Smith,Data Analyst,Robert Johnson,23/07/20,65000,20,Machine-B
 103,Michael Brown,Project Manager,Sarah Lee,30/01/18,90000,10,Machine-C
-104,Emily Davis,HR Specialist,Michael Brown,19/05/21,50000,30,Machine-D
+104,Amily Davis,HR Specialist,Michael Brown,19/05/21,50000,30,Machine-D
 105,Daniel Wilson,DevOps Engineer,John Doe,10/11/17,80000,10,Machine-E
 106,Sarah Lee,Director,None,01/08/15,120000,40,Machine-F
 107,Robert Johnson,Team Lead,Sarah Lee,17/04/16,85000,20,Machine-G
-108,Laura Martinez,Marketing Manager,Emily Davis,05/02/22,55000,30,Machine-H
+108,Laura Martinez,Manager,Emily Davis,05/02/22,55000,30,Machine-H
 109,David Anderson,Software Engineer,Michael Smith,11/12/19,72000,10,Machine-I
 110,Linda Thompson,Financial Analyst,Robert Johnson,28/06/23,60000,20,Machine-J
 111,Abhijeet,Clerk,Amit,24/06/24,90000,22,Machine-L
+112,Jane S,IT,Robert J,23/08/20,66000,21,Desktop

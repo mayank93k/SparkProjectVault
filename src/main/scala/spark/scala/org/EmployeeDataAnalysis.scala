@@ -2,8 +2,9 @@ package spark.scala.org
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.DoubleType
+import org.apache.spark.sql.types.{DoubleType, IntegerType}
 import spark.scala.org.common.logger.Logging
 
 object EmployeeDataAnalysis extends Logging {
@@ -31,65 +32,62 @@ object EmployeeDataAnalysis extends Logging {
      */
     logger.info("Displaying the max salary of clerk")
     val maxClerkSalary = readCsvFile.withColumn("sal", col("sal").cast(DoubleType))
-      .filter(col("designation")==="Clerk")
+      .filter(col("designation") === "Clerk")
       .agg(round(max(col("sal")), 2).as("ClerkMaxSalary"))
     maxClerkSalary.show(false)
 
     logger.info("Displaying the max salary of director")
     val maxDirectorSalary = readCsvFile.withColumn("sal", col("sal").cast(DoubleType))
-      .filter(col("designation")==="Director")
+      .filter(col("designation") === "Director")
       .agg(round(max(col("sal")), 2).as("DirectorMaxSalary"))
     maxDirectorSalary.show(false)
 
     logger.info("Displaying the max salary of software engineer")
     val maxSoftwareEngineerSalary = readCsvFile.withColumn("sal", col("sal").cast(DoubleType))
-      .filter(col("designation")==="Software Engineer")
+      .filter(col("designation") === "Software Engineer")
       .agg(round(max(col("sal")), 2).as("SoftwareEngineerMaxSalary"))
     maxSoftwareEngineerSalary.show(false)
 
+    logger.info("Display the record of those employees who belongs to IT and has a machine as a Desktop")
+    val filterITEmployee = readCsvFile.filter(col("machine") === "Desktop" && col("designation") === "IT")
+    filterITEmployee.show(false)
 
-    //    //Display the record of those employees who belongs to IT and has a machine as a Desktop.
-    //    println("Display the record of those employees who belongs to IT and has a machine as a Desktop.")
-    //    empRdd.filter(p => p.machine == "Desktop" && p.designation == "IT").foreach(println)
-    //
-    //    //Display the record of those employee whose name is start with 'A' ends with 'S'.
-    //    val name = empRdd.filter(x => x.ename.toUpperCase.startsWith("A") && x.ename.toUpperCase.endsWith("S"))
-    //    println("Display the record of those employee whose name is start with 'A' ends with 'S':")
-    //    for (name1 <- name) {
-    //      println(name1)
-    //    }
-    //
-    //    //Display the record of those employee who got hired before 12/30/1981
-    //    println("Display the record of those employee who got hired before 12-30-1981")
-    //    val date1 = "12-30-1981"
-    //    val format = new SimpleDateFormat("MM-dd-yyyy")
-    //    empRdd.filter(a => format.parse(a.hire_date).before(format.parse(date1))).foreach(println)
-    //
-    //    //Display the record of those employee group by deptno.
-    //    println("Display the record of all employee, group by deptno.")
-    //    empRdd.map(x => x).groupBy(a => a.deptno).foreach(println)
-    //
-    //
-    //    //Display the records who has designation as a Manager.
-    //    println("Display the records who has designation as a Manager.")
-    //    empRdd.filter(x => x.designation == "MANAGER").foreach(println)
-    //
-    //
-    //    //Second highest salary and second lowest salary.
-    //    println("The information of those employee who has second highest salary is:")
-    //    val emp = empRdd.map(x => x.sal)
-    //    val max_salary = emp.sortBy(x => x, ascending = false, 1)
-    //    val second_highest_salary = max_salary.zipWithIndex().filter(index => index._2 == 1).map(_._1)
-    //    second_highest_salary.foreach(println)
-    //
-    //
-    //    println("The information of those employee who has second lowest salary is:")
-    //    val min_salary = emp.sortBy(x => x, ascending = true, 1)
-    //    val second_lowest_salary = min_salary.zipWithIndex().filter(index => index._2 == 1).map(_._1)
-    //    second_lowest_salary.foreach(println)
-    //  }
-    //
-    //  case class Employee(empno: Int, ename: String, designation: String, manager: String, hire_date: String, sal: Int, deptno: Int, machine: String)
+    logger.info("Display the record of those employee whose name is start with 'A' ends with 'S'")
+    val employeeNameStartWithAAndEndWithS = readCsvFile.filter(col("ename").startsWith("A") &&
+      upper(col("ename")).endsWith("S"))
+    employeeNameStartWithAAndEndWithS.show(false)
 
+    logger.info("Display the record of those employee who got hired before 12/30/1981")
+    val date = "12-30-1981"
+    val filterHireDate = readCsvFile.filter(col("hire_date") < lit(date))
+    filterHireDate.show(false)
+
+    logger.info("Display the record of those employee group by deptno")
+    val groupEmployees = readCsvFile.groupBy(col("deptno")).agg(count(col("deptno")) as "cnt")
+      .filter(col("cnt") > "1")
+    groupEmployees.show(false)
+
+    logger.info("Display the records who has designation as a Manager")
+    val displayManagerData = readCsvFile.filter(col("designation") === "Manager")
+    displayManagerData.show(false)
+
+    logger.info("Second highest salary and second lowest salary")
+    logger.info("The information of those employee who has second highest salary is:")
+    val highWindow = Window.orderBy(desc("sal"))
+    val secondHighestSalary = readCsvFile.withColumn("sal", col("sal").cast(IntegerType))
+      .withColumn("index", row_number().over(highWindow))
+      .orderBy(asc("index"))
+      .filter(col("index") === "2")
+      .drop("index")
+    secondHighestSalary.show(false)
+
+    logger.info("The information of those employee who has second lowest salary is:")
+    val lowWindow = Window.orderBy(asc("sal"))
+    val secondLowestSalary = readCsvFile.withColumn("sal", col("sal").cast(IntegerType))
+      .withColumn("index", row_number().over(lowWindow))
+      .orderBy(asc("index"))
+      .filter(col("index") === "2")
+      .drop("index")
+    secondLowestSalary.show(false)
   }
 }
